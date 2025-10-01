@@ -1,0 +1,66 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+
+class Student
+{
+private:
+    std::string m_name;
+    int m_age;
+    std::string m_group;
+
+public:
+    Student() : m_name(""), m_age(0), m_group("") {}
+    Student(const std::string& name, int age, const std::string& group)
+        : m_name(name), m_age(age), m_group(group) {
+    }
+
+    void print() const
+    {
+        std::cout << "Name: " << m_name
+            << ", Age: " << m_age
+            << ", Group: " << m_group << std::endl;
+    }
+
+    void saveToFile(const std::string& filename) const {
+        std::ofstream fout(filename);
+        if (!fout)
+        {
+            std::cout << "Error opening file for writing!" << std::endl;
+            return;
+        }
+        fout << m_name << std::endl;
+        fout << m_age << std::endl;
+        fout << m_group << std::endl;
+        fout.close();
+    }
+
+    void loadFromFile(const std::string& filename)
+    {
+        std::ifstream fin(filename);
+        if (!fin)
+        {
+            std::cout << "Error opening file for reading!" << std::endl;
+            return;
+        }
+        std::getline(fin, m_name);
+        fin >> m_age;
+        fin.ignore();
+        std::getline(fin, m_group);
+        fin.close();
+    }
+};
+
+int main()
+{
+    Student st1("Ivan Petrov", 17, "P47");
+    st1.print();
+
+    st1.saveToFile("student.txt");
+
+    Student st2;
+    st2.loadFromFile("student.txt");
+    st2.print();
+
+    return 0;
+}
